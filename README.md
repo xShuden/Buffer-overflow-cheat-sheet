@@ -284,7 +284,7 @@ s.close()
 
 Not: Jmp esp register'ından sonra shellcode'a gelene kadar programın herhangi bir işlem yapmasını önlemek için No Operation (NOP ('\x90')) kodu eklemeliyiz. 4'ün katları yani minimum 16 olacak şekilde exploit kodlarımıza NOP eklemeliyiz. "İşlem yapma demektir". Bu komut, talimat akışında yer kaplayan ancak EIP kaydı hariç makine bağlamını etkilemeyen bir tek bayt'lık talimattır.
 
-ÖZETLE;
+####ÖZETLE;
 
 İlk olarak uygulamadaki crash noktasını bulduk. Offset değerini hesaplayarak kırılma noktasının 2006 karakterde olduğunu tespit ettik. Daha sonra Mona kullanarak uygulama üzerinde JMP ESP instructor'ı bulduk. ('\xAF\x11\x50\x62' #625011AF) ve bunu 2006. karakterden sonra verdik. Ve EIP register'ımıza bu jmp esp kodunu set ettik. Bu sayede ESP içerisine dolduracağımız verileri execute edebilecektik. Uygulamadaki badchar'ları tespit ettik ki bunda yoktu default olarak \x00 yani nullbyte kullandık. Program shellcode'a gelene kadar herhangi bir işlem yapmaması için kodumuza 16 tane NOP (\x90) instructor'laru ekledik. En son da MSFVenom vasıtasıyla oluşturduğumuz shellcode'u exploitimize tanımlayarak işlemimizi exploit geliştirme işlemimizi tamamladık.
 Artık exploit kodumuzu çalıştırmamız durumunda normal şartlar altında hedef sistem üzerinden bir ters bağlantı alabiliriz.
